@@ -19,10 +19,12 @@ jobs:
         with:
           github-token: ${{ secrets.RELEASE_ANTIVIRUS_GITHUB_ACCESS_TOKEN_PBOT4 }}
           script: |
+            let noVirusReleaseId = 45230964;
+
             github.repos.updateRelease({
               owner: 'Particular',
               repo: 'virus-scan-action',
-              release_id: 'test/no-virus',
+              release_id: noVirusReleaseId,
               body: 'This is the normal release text, before adding the virus scan results.'
             });
       - name: Run
