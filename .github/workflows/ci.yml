@@ -19,7 +19,7 @@ jobs:
         with:
           github-token: ${{ secrets.RELEASE_ANTIVIRUS_GITHUB_ACCESS_TOKEN_PBOT4 }}
           script: |
-            let noVirusReleaseId = 45230964;
+            let noVirusReleaseId = 49940655;
 
             github.repos.updateRelease({
               owner: 'Particular',
