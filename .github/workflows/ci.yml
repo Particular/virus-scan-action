@@ -1,0 +1,40 @@
+name: CI
+on:
+  pull_request
+    paths-ignore:
+      - '**.md'
+    push:
+      branches:
+        - main
+      paths-ignore:
+        - '**.md'
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.3.4
+    - name: Reset test release
+      uses: actions/github-script@v4.1.0
+      with:
+        github-token: ${{ secrets.RELEASE_ANTIVIRUS_GITHUB_ACCESS_TOKEN_PBOT4 }}
+        script: |
+          github.repos.updateRelease({
+            owner: 'Particular',
+            repo: 'virus-scan-action',
+            release_id: 'test/no-virus',
+            body: 'This is the normal release text, before adding the virus scan results.'
+          });
+      - name: Run
+        uses: ./
+        with:
+          owner: Particular
+          repo: virus-scan-action
+          tag: test/no-virus
+          github-access-token: ${{ secrets.RELEASE_ANTIVIRUS_GITHUB_ACCESS_TOKEN_PBOT4 }}
+      - name: Check result
+        shell: pwsh
+        run: |
+          $code = $Env:CLAMAV_RETURN_CODE
+          Write-Host "ClamAV Return Code: $code"
+          if ($code -ne '0') { throw "ClamAV did not return 0"}
