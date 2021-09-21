@@ -81,6 +81,8 @@ runs:
         SLACK_TOKEN: ${{ inputs.slack-token }}
         SLACK_CHANNEL: ${{ inputs.slack-channel }}
       run: |
+        # Notify Slack on viruses detected
+        
         if ($Env:SLACK_TOKEN -eq '') {
           Write-Output "inputs.slack-token not provided, can't post to Slack"
           exit 0
@@ -108,8 +110,9 @@ runs:
           unfurl_media = false
         } | ConvertTo-Json
 
+        Write-Output "Posting virus alert to Slack..."
         $result = Invoke-RestMethod -Method POST -Uri https://slack.com/api/chat.postMessage -ContentType "application/json; charset=utf-8" -Headers $headers -Body $body
-
+        Write-Output $result
         exit $(If ($result.ok) { 0 } Else { 1 })
     - name: Update release notes
       uses: actions/github-script@v4.1.0
