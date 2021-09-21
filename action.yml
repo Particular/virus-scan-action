@@ -12,6 +12,13 @@ inputs:
     required: true
   github-access-token:
     description: 'A GitHub access token that can read and write the release details'
+    required: true
+  slack-token:
+    description: 'A Slack bearer token for posting virus warnings to a Slack channel'
+    required: false
+  slack-channel:
+    description: 'The Slack channel to post virus warnings to'
+    required: false
 runs:
   using: "composite"
   steps:
@@ -68,18 +75,39 @@ runs:
         sudo clamscan --infected github-release-assets/ > scan-results.log
         echo "CLAMAV_RETURN_CODE=$?" >> $GITHUB_ENV
         exit 0;
-    # - name: Notify Slack on viruses detected
-    #   if: ${{ env.CLAMAV_RETURN_CODE == '1' }}
-    #   uses: 8398a7/action-slack@v3.9.3
-    #   with:
-    #     username: ClamAV Virus Scanning Workflow
-    #     status: failure
-    #     text: "ClamAV has detected a virus in the release at ${{ env.RELEASE_HTML_URL }}"
-    #     author_name: ""
-    #     fields: repo,ref,action,commit,author
-    #     icon_emoji: ":biohazard_sign:"
-    #   env:
-    #     SLACK_WEBHOOK_URL: ${{ secrets.RELEASE_ANTIVIRUS_SLACK_WEBHOOK_URL }}
+    - name: Notify Slack on viruses detected
+      if: ${{ env.CLAMAV_RETURN_CODE == '1' }}
+      shell: pwsh
+      env:
+        SLACK_TOKEN: ${{ inputs.slack-token }}
+        SLACK_CHANNEL: ${{ inputs.slack-channel }}
+      run: |
+        if ($Env:SLACK_TOKEN -eq '') {
+          Write-Output "inputs.slack-token not provided, can't post to Slack"
+          exit 0
+        }
+        if ($Env:SLACK_TOKEN -eq '') {
+          Write-Output "inputs.slack-channel not provided, can't post to Slack"
+          exit 0
+        }
+        if ($Env:CLAMAV_RETURN_CODE -eq '0') {
+          Write-Output "No virus detected, no reason to alert"
+          exit 0
+        }
+
+        $headers = @{
+            'Authorization' = "Bearer ${$Env:SLACK_TOKEN}"
+        }
+        $body = @{
+          channel = $Env:SLACK_CHANNEL
+          text = "ClamAV has detected a virus in the release at ${$Env:RELEASE_HTML_URL}"
+          username = 'Virus Scan Workflow'
+          icon_emoji = 'biohazard_sign'
+          unfurl_links = false
+          unfurl_media = false
+        } | ConvertTo-Json
+
+        Invoke-RestMethod -Method POST -Uri https://slack.com/api/chat.postMessage -ContentType "application/json; charset=utf-8" -Headers $headers -Body $body
     - name: Update release notes
       uses: actions/github-script@v4.1.0
       with:
