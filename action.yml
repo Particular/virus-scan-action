@@ -108,7 +108,9 @@ runs:
           unfurl_media = false
         } | ConvertTo-Json
 
-        Invoke-RestMethod -Method POST -Uri https://slack.com/api/chat.postMessage -ContentType "application/json; charset=utf-8" -Headers $headers -Body $body
+        $result = Invoke-RestMethod -Method POST -Uri https://slack.com/api/chat.postMessage -ContentType "application/json; charset=utf-8" -Headers $headers -Body $body
+
+        exit $(If ($result.ok -eq True) { 0 } Else { 1 })
     - name: Update release notes
       uses: actions/github-script@v4.1.0
       with:
