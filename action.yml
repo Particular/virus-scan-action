@@ -76,7 +76,6 @@ runs:
         echo "CLAMAV_RETURN_CODE=$?" >> $GITHUB_ENV
         exit 0;
     - name: Notify Slack on viruses detected
-      if: ${{ env.CLAMAV_RETURN_CODE == '1' }}
       shell: pwsh
       env:
         SLACK_TOKEN: ${{ inputs.slack-token }}
