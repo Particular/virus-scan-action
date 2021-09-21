@@ -47,6 +47,8 @@ jobs:
           repo: virus-scan-action
           tag: ${{ matrix.tag }}
           github-access-token: ${{ secrets.RELEASE_ANTIVIRUS_GITHUB_ACCESS_TOKEN_PBOT4 }}
+          slack-token: ${{ secrets.SLACK_TOKEN }}
+          slack-channel: automation-testing
       - name: Check result
         shell: pwsh
         run: |
