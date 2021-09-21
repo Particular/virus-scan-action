@@ -83,16 +83,16 @@ runs:
       run: |
         # Notify Slack on viruses detected
         
+        if ($Env:CLAMAV_RETURN_CODE -eq '0') {
+          Write-Output "No virus detected, no reason to alert"
+          exit 0
+        }
         if ($Env:SLACK_TOKEN -eq '') {
           Write-Output "inputs.slack-token not provided, can't post to Slack"
           exit 0
         }
         if ($Env:SLACK_TOKEN -eq '') {
           Write-Output "inputs.slack-channel not provided, can't post to Slack"
-          exit 0
-        }
-        if ($Env:CLAMAV_RETURN_CODE -eq '0') {
-          Write-Output "No virus detected, no reason to alert"
           exit 0
         }
 
