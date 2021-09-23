@@ -34,8 +34,8 @@ jobs:
       - name: Scan release for viruses
         uses: Particular/virus-scan-action@main
         with:
-          owner: Particular
-          repo: REPOSITORY_NAME
+          owner: ${{ github.repository_owner }}
+          repo: ${{ github.event.repository.name }}
           tag: ${{ github.event.release.name }}
           github-access-token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
           slack-token: ${{ secrets.SLACK_TOKEN }}
