@@ -28,7 +28,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2.3.4
       - name: Reset test release
-        uses: actions/github-script@v4.1.0
+        uses: actions/github-script@v4.1.1
         with:
           github-token: ${{ secrets.RELEASE_ANTIVIRUS_GITHUB_ACCESS_TOKEN_PBOT4 }}
           script: |
