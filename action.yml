@@ -46,7 +46,7 @@ runs:
           
           await io.mkdirP('github-release-assets');
           
-          let release = await github.repos.getReleaseByTag({
+          let release = await github.rest.repos.getReleaseByTag({
             owner: '${{ inputs.owner }}',
             repo: '${{ inputs.repo }}',
             tag: '${{ inputs.tag }}'
@@ -133,7 +133,7 @@ runs:
             let releaseBody = RELEASE_BODY + '\n\n<details><summary><b>🛡 ClamAV virus scan results: ' + 
               status + '</b></summary>\n\n```\nVersion: ' + CLAMAV_VERSION + 
               '\nScan Date: ' + new Date().toUTCString() + '\n' + fileText + '\n```\n\n</details>';
-            github.repos.updateRelease({
+            github.rest.repos.updateRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
               release_id: RELEASE_ID,
