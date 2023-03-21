@@ -47,7 +47,7 @@ jobs:
           owner: Particular
           repo: virus-scan-action
           tag: ${{ matrix.tag }}
-          github-access-token: ${{ secrets.RELEASE_ANTIVIRUS_GITHUB_ACCESS_TOKEN_PBOT4 }}
+          github-access-token: ${{ secrets.GITHUB_TOKEN }}
           slack-token: ${{ secrets.SLACK_TOKEN }}
           slack-channel: automation-testing
       - name: Check result
