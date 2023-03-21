@@ -31,7 +31,7 @@ jobs:
       - name: Reset test release
         uses: actions/github-script@v6
         with:
-          github-token: ${{ secrets.RELEASE_ANTIVIRUS_GITHUB_ACCESS_TOKEN_PBOT4 }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             let releaseId = ${{ matrix.release-id }};
 
