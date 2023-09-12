@@ -27,9 +27,9 @@ jobs:
             expected-result: 1
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.0.0
       - name: Reset test release
-        uses: actions/github-script@v6
+        uses: actions/github-script@v6.4.1
         with:
           github-token: ${{ secrets.CI_GITHUB_TOKEN }}
           script: |
