@@ -38,7 +38,7 @@ runs:
         sudo freshclam
         sudo systemctl start clamav-freshclam
     - name: Get release
-      uses: actions/github-script@v6
+      uses: actions/github-script@v7
       with:
         github-token: ${{ inputs.github-access-token }}
         script: |
@@ -115,7 +115,7 @@ runs:
         Write-Output $result
         exit $(If ($result.ok) { 0 } Else { 1 })
     - name: Update release notes
-      uses: actions/github-script@v6
+      uses: actions/github-script@v7
       with:
         github-token: ${{ inputs.github-access-token }}
         script: |
