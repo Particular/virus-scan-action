@@ -57,7 +57,7 @@ runs:
           core.exportVariable('RELEASE_HTML_URL', release.data.html_url);
           
           for (const assetInfo of release.data.assets) {
-            let asset = await github.request(assetInfo.browser_download_url);
+            let asset = await github.request(assetInfo.url, { headers: { accept: 'application/octet-stream' } });
             await fs.writeFile('github-release-assets/' + assetInfo.name, Buffer.from(asset.data), () => {});
           }
           
